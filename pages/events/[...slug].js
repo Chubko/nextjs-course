@@ -2,9 +2,9 @@ import { Fragment, useEffect, useState } from 'react'
 import { useRouter } from 'next/router'
 import useSWR from 'swr'
 import Head from 'next/head'
+
 import EventList from '../../components/events/event-list'
 import ResultsTitle from '../../components/events/results-title'
-
 import { getFilteredEvents } from '../../helpers/api-utils'
 import Button from '../../components/ui/button'
 import ErrorAlert from '../../components/ui/error-alert'
@@ -83,7 +83,7 @@ function FilteredEventsPage(props) {
       <Fragment>
         {pageHeadData}
         <ErrorAlert>
-          <p>Invalid filter. Please adjast your values!</p>
+          <p>Invalid filter. Please adjust your values!</p>
         </ErrorAlert>
         <div className="center">
           <Button link="/events">Show All Events</Button>

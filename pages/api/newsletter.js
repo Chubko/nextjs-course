@@ -1,4 +1,4 @@
-import { MongoClient, ServerApiVersion } from 'mongodb';
+import { connectDatabase, insertDocument } from "../../helpers/db-utils";
 
 async function handler(req, res) {
     if (req.method === 'POST') {
@@ -9,41 +9,25 @@ async function handler(req, res) {
             return;
         }
 
-        // const client = await MongoClient.connect('mongodb+srv://luda:moskaliuk777@cluster0.b2j5vvk.mongodb.net/?retryWrites=true&w=majority');
+        let client;
 
-        // const db = client.db('newsletter');
+        try {
+            client = await connectDatabase();
+        } catch (e) {
+            res.status(500).json({ message: 'Connection to the database failed!'});
+            return;
+        }
 
-        // await db.collection('emails').insertOne({ email: userEmail });
-
-        // client.close();
-
-        const uri = "mongodb+srv://luda:moskaliuk777@cluster0.b2j5vvk.mongodb.net/?retryWrites=true&w=majority";
-        const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
-
-     client.connect(err => {
-            const collection = client.db("test").collection("devices");
-            console.log(2, err)
-            // perform actions on the collection object
-            client.close();
-          });
-
-        const db = client.db('newsletter');
-
-        await db.collection('emails').insertOne({ email: userEmail });
-console.log(1, userEmail)
-        client.close();
-
+        try {
+            await insertDocument(client, 'newsletter',{ email: userEmail });
+            await client.close();
+        } catch (e) {
+            res.status(500).json({ message: 'Inserting data failed!'});
+            return;
+        }
         res.status(201).json({ message: 'Signed up'})
     }
 }
 
-export default handler;
 
-// const { MongoClient, ServerApiVersion } = require('mongodb');
-// const uri = "mongodb+srv://luda:<password>@cluster0.b2j5vvk.mongodb.net/?retryWrites=true&w=majority";
-// const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
-// client.connect(err => {
-//   const collection = client.db("test").collection("devices");
-//   // perform actions on the collection object
-//   client.close();
-// });
+export default handler;

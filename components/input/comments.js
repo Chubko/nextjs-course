@@ -13,15 +13,13 @@ function Comments(props) {
   useEffect(() => {
     if (showComments) {
       console.log(3)
-      fetch('api/comments/'+eventId)
+      fetch('/api/comments/'+eventId)
       .then(response => {
-        console.log(response)
+        console.log('response',response)
         return response.json()
       })
-      .then(data => {
-        console.log('data', data)
-        setComments(data.comments);
-      })
+      // .then(response => response.json())
+      .then(data => setComments(data.comments));
     }
   }, [showComments]);
 
@@ -32,7 +30,7 @@ function Comments(props) {
 
   function addCommentHandler(commentData) {
     console.log(1)
-    fetch('api/comments' + eventId, {
+    fetch('/api/comments/' + eventId, {
       method: 'POST',
       body: JSON.stringify(commentData),
       headers: {
